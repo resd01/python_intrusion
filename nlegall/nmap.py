@@ -43,7 +43,6 @@ if port_end < port_start:
 	pass
 
 os.system('clear')
-print args.verbose
 
 print unicode("╔", 'utf-8') + unicode("═", 'utf-8') * 78 + unicode("╗", 'utf-8')
 print unicode("║", 'utf-8') + "                        _,.--.                                                " + unicode("║", 'utf-8')
