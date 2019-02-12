@@ -4,6 +4,7 @@
 # Import modules
 import socket, time, sys, os
 import argparse
+from scapy.all import *
 
 from datetime import datetime
 from termcolor import colored, cprint
@@ -14,6 +15,7 @@ parser.add_argument('-H', action='store', dest='host', help='Host to scan')
 parser.add_argument('-s', action='store', dest='port_start', help='First port to scan', type=int)
 parser.add_argument('-e', action='store', dest='port_end', help='Last port to scan', type=int)
 parser.add_argument('-v', dest='verbose', help='Show all ports scanned', action="store_true")
+parser.add_argument('--scapy', dest='verbose', help='Use scapy librairie', action="store_true")
 args = parser.parse_args()
 
 # Définition des paramètres
@@ -42,7 +44,7 @@ if port_end < port_start:
 	sys.exit(2)
 	pass
 
-os.system('clear')
+#os.system('clear')
 
 print unicode("╔", 'utf-8') + unicode("═", 'utf-8') * 78 + unicode("╗", 'utf-8')
 print unicode("║", 'utf-8') + "                        _,.--.                                                " + unicode("║", 'utf-8')
@@ -52,19 +54,34 @@ print unicode("║", 'utf-8') + "          '.`-...-'.'                          
 print unicode("║", 'utf-8') + "            `-...-'                                                           " + unicode("║", 'utf-8')
 print unicode("╚", 'utf-8') + unicode("═", 'utf-8') * 78 + unicode("╝", 'utf-8')
 time_start = time.time()
-# Bind du socket avec les paramètres
-for x in xrange(port_start,port_end + 1):
-	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-	s.settimeout(0.1)
-	result = s.connect_ex((host, x))
-	if result == 0:
-		cprint("[+]\tPort open  : " + str(x) + "\t\t" + socket.getservbyport(x).rstrip(), 'green') 
-	else:
-		if args.verbose:
-			cprint("[-]\tPort close : " + str(x), 'red')
-			pass
+
+if scapy:
+	for x in xrange(port_start,port_end + 1):
+		response = sr1(IP(dst=host)/TCP(dport=x, flags="S"),verbose=False, timeout=0.2)
+		if response :
+			if response[TCP].flags == 18 :    
+				cprint("[+]\tPort open  : " + str(x) + "\t\t" + socket.getservbyport(x).rstrip(), 'green') 
+		else:
+			if args.verbose:
+				cprint("[-]\tPort close : " + str(x), 'red')
+				pass
+		pass
 	pass
-	s.close()
+else:
+	# Bind du socket avec les paramètres
+	for x in xrange(port_start,port_end + 1):
+		s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+		s.settimeout(0.1)
+		result = s.connect_ex((host, x))
+		if result == 0:
+			cprint("[+]\tPort open  : " + str(x) + "\t\t" + socket.getservbyport(x).rstrip(), 'green') 
+		else:
+			if args.verbose:
+				cprint("[-]\tPort close : " + str(x), 'red')
+				pass
+		pass
+		s.close()
+pass
 
 print "> Done within %ss" % str(time.time() - time_start)
 sys.exit(0)
