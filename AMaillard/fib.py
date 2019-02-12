@@ -1,6 +1,8 @@
 # coding: utf-8
 # python 3.7.1 x86_64
 
+__author__ = "Maillard Alexandre"
+
 import time
 
 def fibo(max=50):
