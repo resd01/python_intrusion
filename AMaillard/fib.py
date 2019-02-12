@@ -15,6 +15,6 @@ def fibo(max=50):
 
 start = time.time()
 for i, j in enumerate(fibo(max=50)):
-    print "%s  %s" % (i, j)
+    print(f"{i}: {j}")
 end = time.time() - start
 print(end)
