@@ -1,0 +1,57 @@
+# coding: utf-8
+# python 3.7.1 x86_64
+
+import socket
+import sys
+import time
+import colorama
+
+__author__ = "Maillard Alexandre"
+
+# Initialisation des variables
+# TODO faire des vérifications les arguments
+colorama.init(autoreset=True)
+IP    = input("Entrer une adresse IP: ")
+port_min = input("numéro de port min: ")
+port_max = input("numéro de port max: ")
+port_min = int(port_min) if port_min != "" else 1
+port_max = int(port_max) if port_max != "" else 1024
+IP  = socket.gethostbyname(IP)
+start = time.time()
+l_port = []
+
+try:
+    for port in range(port_min, port_max+1):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        result = sock.connect_ex((IP, port))
+        if result == 0:
+            if len(l_port) == 1:
+                print(f"{colorama.Fore.RED }Port {l_port[0]}: 	 Close")
+            elif len(l_port) > 0:
+                print(f"{colorama.Fore.RED }Ports {l_port[0]}-{l_port[-1]}: 	 Close")
+            l_port = []
+            service = socket.getservbyport(port)
+            print(f"{colorama.Fore.GREEN}Port {port}: 	 Open, --> {service}")
+        else:
+            l_port.append(port)
+        sock.close()
+    else:
+        if len(l_port) > 1:
+            print(f"{colorama.Fore.RED }Ports {l_port[0]}-{l_port[-1]}: 	 Close")
+        elif len(l_port) == 1:
+            print(f"{colorama.Fore.RED }Port {l_port[0]}: 	 Close")
+        l_port = None
+
+except KeyboardInterrupt:
+    print("You pressed Ctrl+C")
+    sock.close()
+    sys.exit(-1)
+except socket.gaierror:
+    print('Hostname could not be resolved. Exiting')
+    sys.exit(-2)
+except socket.error:
+    print("Couldn't connect to server")
+    sys.exit(-3)
+
+end = time.time() - start
+print(f"Durée {end}")
