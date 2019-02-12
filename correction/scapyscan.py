@@ -23,7 +23,7 @@ def isTargetUp(addr):
 conf.verb = 0
 start_time = time.time()
 port_min = int(raw_input("Port min: "))
-port_max = int(raw_input("Port max: ")) + 1
+port_max = int(raw_input("Port max: ")conf) + 1
 ports = range(port_min, port_max)
 
 
@@ -40,9 +40,8 @@ if isTargetUp(ip):
         if resp:
             if resp.haslayer(TCP):
                 if resp.getlayer(TCP).flags == 0x12:
-                    send_rst = sr(IP(dst=ip) / TCP(sport=srcPort, dport=port, flags='AR'), timeout=1)
                     print("[+] Port %s is open" % port)
-                elif resp.getlayer(TCP).flags == 0x14:
+                else:
                     print("[-] Port %s is closed" % port)
         else:
             print("[-] Port %s is closed" % port)
