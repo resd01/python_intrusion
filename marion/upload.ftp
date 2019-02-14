@@ -1,0 +1,11 @@
+#!/usr/bin/python
+
+import ftplib
+
+def upload_ftp(file_path):
+    session = ftplib.FTP('192.168.35.68')           #set host
+    session.login()                                 #login
+    file = open(str(file_path) ,'rb')               # file to send
+    session.storbinary('STOR dir/tata.txt', file)   # send the file
+    file.close()                                    # close file and FTP
+    session.quit()
