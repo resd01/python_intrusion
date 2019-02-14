@@ -30,7 +30,6 @@ def on_press(key):
         # elif key == Key.esc:
         #     return False
         elif key == Key.caps_lock:
-            print("coucou")
             if flags["caps_lock"]:
                 flags["caps_lock"] = False
             else:
