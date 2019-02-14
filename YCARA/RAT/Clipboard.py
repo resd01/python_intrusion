@@ -35,7 +35,7 @@ def main():
         if data != dataSent:
             dataSent = data
             send(data)
-        time.sleep(5)
+        time.sleep(2)
 
 
 main()
