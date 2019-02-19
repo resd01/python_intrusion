@@ -15,5 +15,7 @@ pip install pyinstaller
 # -F : produit un seul fichier
 # -w : cache la fenêtre python
 # -i : icône du binaire produit
-pyinstaller -F -w -i icone.ico script.py
+# -n : choix du nom de l'application en sortie
+# --clean : nettoyage des fichiers temporaires avant le build de l'application
+pyinstaller script.py -F -w -i icone.ico -n app.exe --clean
 ```
